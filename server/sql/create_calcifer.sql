@@ -1,0 +1,18 @@
+-- Script para crear la base de datos Calcifer y la tabla productos
+CREATE DATABASE IF NOT EXISTS calcifer;
+USE calcifer;
+
+CREATE TABLE IF NOT EXISTS productos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(255) NOT NULL,
+  descripcion TEXT NULL,
+  cantidad INT NOT NULL DEFAULT 0,
+  precio_compra DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  precio_venta DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  marca VARCHAR(100) NULL,
+  ubicacion VARCHAR(100) NULL,
+  categoria VARCHAR(100) NULL,
+  stock_minimo INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
