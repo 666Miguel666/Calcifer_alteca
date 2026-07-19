@@ -1,34 +1,27 @@
-import * as fichasServices from '../services/fichasServices.js';
+import * as fichaServices from '../services/fichasServices.js';
 
-export const getFichas = (req, res) => {
-    try{
-        console.log("Controlador: haan solicitado la lista de fichas");
-        //llamar al servicio para que nos de los datos de las fichas
-        const fichas = fichasServices.obtenerFichas();
-        res.status(200).json({
-            mensaje: 'Lista de fichas recuperadas con éxito',
-            total: fichas.length,
-            datos: fichas
-        });
-    }catch(error){
-        console.log(error);
+// Controlador para obtener todas las fichas
+export const getFichas = async (req, res) => {
+    try {
+        const fichas = await fichaServices.obtenerFichas();
+        res.json(fichas);
+    } catch (error) {
         res.status(500).json({
-            mensaje: 'Error en el servidor al obtener las fichas',
-            error: error.message
+            error: 'Error al obtener las fichas'
         });
     }
 };
 
-export const createFicha = (req, res) => {
-    try{
-        console.log("Controlador: han enviado un registro al servicio Post de fichas, req.body:", req.body);
-        //validamos que vengan los datos necesarios para crear la ficha
-        const nuevaFicha = fichasServices.crearFicha(req.body);
-        res.status(201).json({
-            mensaje: 'Ficha creada con éxito',
-            fichaCreada: nuevaFicha
+// Controlador para crear una nueva ficha
+export const createFicha = async (req, res) => {
+    const datosFicha = req.body;
+
+    try {
+        const nuevaFicha = await fichaServices.crearFicha(datosFicha);
+        res.status(201).json(nuevaFicha);
+    } catch (error) {
+        res.status(500).json({
+            error: 'Error al crear la ficha'
         });
-    }catch(error){
-        res.status(500).json({mensaje: 'Error en el servidor al crear la ficha', error: error.message});
-    }   
+    }
 };

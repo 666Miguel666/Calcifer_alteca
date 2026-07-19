@@ -1,20 +1,24 @@
-// Base de datos temporal en memoria(simulación)
-let fichasSena = [
-    { id: 1, numeroFicha: '2874011', programa: 'ADSO', tieneAlerta: false},
-    { id: 2, numeroFicha: '2901345', programa: 'ADSO', tieneAlerta: true}
-];
-// servicio: Obtener todas las fichas
-export const obtenerFichas = (req, res) => {
-    return fichasSena;
+import pool from '../config/db.js';// importamos el pool de conexiones
+//Metodo GET
+export const obtenerFichas = async () => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM fichas');
+        return rows;
+    } catch (error) {
+        throw error;
+    }
 };
-// servicio: Crear una nueva ficha
-export const crearFicha = (datosFicha) => { 
-    const nuevaFicha = {
-        id: fichasSena.length + 1,
-        numeroFicha: datosFicha.numeroFicha,
-        programa: datosFicha.programa,
-        tieneAlerta: false // Por defecto, la nueva ficha no tiene alerta
-    };
-    fichasSena.push(nuevaFicha);
-    return nuevaFicha;
-    };
+//metodo POST
+export const crearFicha = async (datosFicha) => {
+    const{numeroFicha,programa} = datosFicha;
+    try {
+        const [result] = await pool.query(
+            'INSERT INTO fichas (numeroFicha, programa) VALUES (?, ?)',
+             [numeroFicha, programa]
+            );
+            //retornamos el registro recien creado
+        return {id: result.insertId, numeroFicha, programa,tieneAlerta: false};
+    } catch (error) {
+        throw new Error('Error al crear la ficha: ' + error.message);
+    }
+};
